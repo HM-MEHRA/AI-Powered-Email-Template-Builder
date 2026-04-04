@@ -1,0 +1,40 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env
+.env.*
+!.env.example
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.sqlite3
+Email_template_builder/venv/
+Email_template_builder/media/
+Email_template_builder/uploaded_images/
+Email_template_builder/backend_err.log
+Email_template_builder/backend_out.log
+Email_template_builder/db.sqlite3
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
