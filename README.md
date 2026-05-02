@@ -129,4 +129,7 @@ Keep `PASSWORD_RESET_EMAIL_ENABLED=false` until SMTP is ready. The Account page 
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the PolyForm Noncommercial License 1.0.0.
+Commercial use, resale, and commercial redistribution are not allowed under
+this repository's license unless you first get separate permission from the
+copyright holder.
