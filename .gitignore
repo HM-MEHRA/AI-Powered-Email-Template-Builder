@@ -35,6 +35,15 @@ Email_template_builder/backend_err.log
 Email_template_builder/backend_out.log
 Email_template_builder/db.sqlite3
 
+*.log
+*.err
+*.err.log
+*.out.log
+*run.log
+*run.err
+
+report_assets/edge-profile/
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

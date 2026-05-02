@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project Repository Structure - Inbox Studio</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(56, 189, 248, 0.18), transparent 30%),
+        radial-gradient(circle at 88% 12%, rgba(251, 146, 60, 0.16), transparent 28%),
+        #0f172a;
+      font-family: "Segoe UI", Arial, sans-serif;
+      padding: 28px;
+    }
+    .frame {
+      width: 1180px;
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 18px;
+      overflow: hidden;
+      background: #0b1120;
+      box-shadow: 0 34px 110px rgba(0, 0, 0, 0.42);
+      color: #dbeafe;
+    }
+    .titlebar {
+      height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      background: #111827;
+    }
+    .dots { display: flex; gap: 8px; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .red { background: #ef4444; }
+    .yellow { background: #f59e0b; }
+    .green { background: #22c55e; }
+    .window-title {
+      color: #cbd5e1;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .app {
+      display: grid;
+      grid-template-columns: 72px 405px 1fr;
+      min-height: 760px;
+    }
+    .activity {
+      padding: 18px 0;
+      border-right: 1px solid rgba(148, 163, 184, 0.16);
+      background: #020617;
+      display: grid;
+      justify-items: center;
+      align-content: start;
+      gap: 18px;
+    }
+    .icon {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      color: #94a3b8;
+      font-weight: 900;
+    }
+    .icon.active {
+      background: rgba(59, 130, 246, 0.16);
+      color: #bfdbfe;
+      box-shadow: inset 3px 0 0 #38bdf8;
+    }
+    .sidebar {
+      border-right: 1px solid rgba(148, 163, 184, 0.18);
+      background: #111827;
+      padding: 18px 16px 24px;
+    }
+    .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #e5e7eb;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .tree {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.74;
+      color: #cbd5e1;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 26px;
+      border-radius: 7px;
+      padding: 0 7px;
+      white-space: nowrap;
+    }
+    .row.active {
+      background: rgba(96, 165, 250, 0.16);
+      color: #ffffff;
+    }
+    .indent-1 { padding-left: 22px; }
+    .indent-2 { padding-left: 42px; }
+    .indent-3 { padding-left: 62px; }
+    .folder { color: #67e8f9; font-weight: 700; }
+    .react { color: #93c5fd; font-weight: 700; }
+    .django { color: #86efac; font-weight: 700; }
+    .file { color: #e2e8f0; }
+    .py { color: #60a5fa; }
+    .js { color: #facc15; }
+    .db { color: #fb923c; }
+    .muted { color: #64748b; }
+    .editor {
+      background:
+        linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.96));
+      padding: 28px;
+    }
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .tab {
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.9);
+      color: #cbd5e1;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .tab.active {
+      background: rgba(14, 165, 233, 0.16);
+      color: #e0f2fe;
+      border-color: rgba(56, 189, 248, 0.38);
+    }
+    h1 {
+      margin: 0;
+      color: #ffffff;
+      font-size: 34px;
+      letter-spacing: -0.03em;
+    }
+    .subtitle {
+      margin: 12px 0 26px;
+      max-width: 610px;
+      color: #94a3b8;
+      font-size: 16px;
+      line-height: 1.65;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .card {
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 18px;
+      background: rgba(15, 23, 42, 0.72);
+      padding: 18px;
+    }
+    .label {
+      color: #93c5fd;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .card h2 {
+      margin: 12px 0 10px;
+      color: #f8fafc;
+      font-size: 21px;
+    }
+    .card p {
+      margin: 0;
+      color: #a8b6ca;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .highlight {
+      border-color: rgba(52, 211, 153, 0.38);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.13), rgba(14, 165, 233, 0.08));
+    }
+  </style>
+</head>
+<body>
+  <section class="frame" aria-label="project repository structure">
+    <div class="titlebar">
+      <div class="dots" aria-hidden="true">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+      </div>
+      <div class="window-title">VS Code - Inbox Studio Repository</div>
+      <div class="muted">Explorer</div>
+    </div>
+
+    <div class="app">
+      <aside class="activity" aria-hidden="true">
+        <div class="icon active">E</div>
+        <div class="icon">S</div>
+        <div class="icon">G</div>
+        <div class="icon">T</div>
+      </aside>
+
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <span>Explorer</span>
+          <span>...</span>
+        </div>
+        <div class="tree">
+          <div class="row"><span>▾</span><span class="folder">Email_template_builder</span></div>
+          <div class="row indent-1"><span>▾</span><span class="react">frontend / React</span></div>
+          <div class="row indent-2"><span>▸</span><span class="folder">public</span></div>
+          <div class="row indent-2"><span>▾</span><span class="folder">src</span></div>
+          <div class="row indent-3"><span>▸</span><span class="folder">components</span></div>
+          <div class="row indent-3"><span>▸</span><span class="folder">services</span></div>
+          <div class="row indent-3"><span class="js">◆</span><span class="file">App.js</span></div>
+          <div class="row indent-2"><span class="js">◆</span><span class="file">package.json</span></div>
+          <div class="row indent-2"><span class="file">#</span><span class="file">tailwind.config.js</span></div>
+
+          <div class="row indent-1"><span>▾</span><span class="django">backend / Django</span></div>
+          <div class="row indent-2"><span>▾</span><span class="folder">email_builder</span></div>
+          <div class="row indent-3"><span class="py">◆</span><span class="file">settings.py</span></div>
+          <div class="row indent-3"><span class="py">◆</span><span class="file">urls.py</span></div>
+          <div class="row indent-2"><span>▾</span><span class="folder">templates_api</span></div>
+          <div class="row indent-3 active"><span class="py">◆</span><span class="file">views.py</span></div>
+          <div class="row indent-3"><span class="py">◆</span><span class="file">urls.py</span></div>
+          <div class="row indent-3"><span class="py">◆</span><span class="file">models.py</span></div>
+          <div class="row indent-3"><span class="py">◆</span><span class="file">serializers.py</span></div>
+          <div class="row indent-3"><span class="py">◆</span><span class="file">generation_service.py</span></div>
+          <div class="row indent-3"><span>▸</span><span class="folder">migrations</span></div>
+          <div class="row indent-2"><span>▸</span><span class="folder">media</span></div>
+          <div class="row indent-2"><span>▸</span><span class="folder">uploaded_images</span></div>
+          <div class="row indent-2"><span class="db">●</span><span class="file">db.sqlite3</span></div>
+          <div class="row indent-2"><span class="py">◆</span><span class="file">manage.py</span></div>
+          <div class="row indent-2"><span class="file">#</span><span class="file">requirements.txt</span></div>
+
+          <div class="row indent-1"><span class="file">#</span><span class="file">Dockerfile.backend</span></div>
+          <div class="row indent-1"><span class="file">#</span><span class="file">Dockerfile.frontend</span></div>
+          <div class="row indent-1"><span class="file">#</span><span class="file">docker-compose.yml</span></div>
+        </div>
+      </aside>
+
+      <main class="editor">
+        <div class="tabs">
+          <div class="tab active">Repository Structure</div>
+          <div class="tab">views.py</div>
+          <div class="tab">urls.py</div>
+          <div class="tab">models.py</div>
+        </div>
+        <h1>Full-Stack Project Repository</h1>
+        <p class="subtitle">
+          Clean project layout showing the React frontend and Django backend.
+          The backend highlights the core API files used for request handling,
+          URL routing, and database models.
+        </p>
+        <div class="cards">
+          <article class="card">
+            <div class="label">Frontend</div>
+            <h2>React Application</h2>
+            <p>The `src` folder contains reusable components, service APIs, application state, and UI flow for login, generation, templates, editor, preview, history, and account pages.</p>
+          </article>
+          <article class="card highlight">
+            <div class="label">Backend</div>
+            <h2>Django API</h2>
+            <p>The `templates_api` app contains `views.py`, `urls.py`, and `models.py`, which power authentication, email generation, template management, and history storage.</p>
+          </article>
+          <article class="card">
+            <div class="label">Database</div>
+            <h2>SQLite Storage</h2>
+            <p>The `db.sqlite3` file stores user accounts, generated email history, saved templates, favorites, sharing data, and archive state during development.</p>
+          </article>
+          <article class="card">
+            <div class="label">Deployment</div>
+            <h2>Docker Support</h2>
+            <p>Dockerfiles and compose configuration define separate frontend and backend services, making the full-stack project easier to run and deploy.</p>
+          </article>
+        </div>
+      </main>
+    </div>
+  </section>
+</body>
+</html>

@@ -1,0 +1,8 @@
+text,label,phishing_type,severity,confidence
+"Subject: Team Update
+Hello team,
+The weekly notes are ready for review.
+Best,
+[Your Name]",0,legitimate,low,0.98
+"Subject: Verify Password
+Click this urgent login link now.",1,credential_harvesting,high,0.99

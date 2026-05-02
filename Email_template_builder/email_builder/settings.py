@@ -37,16 +37,41 @@ def load_env_file(*paths):
 load_env_file(PROJECT_ROOT / ".env", BASE_DIR / ".env")
 
 
+def env_bool(name, default=False):
+    value = os.environ.get(name)
+    if value is None:
+        return default
+    return value.lower() in ["1", "true", "yes", "on"]
+
+
+def env_list(name, default=""):
+    value = os.environ.get(name, default)
+    return [item.strip() for item in value.split(",") if item.strip()]
+
+
+def env_int(name, default=0):
+    value = os.environ.get(name)
+    if value is None:
+        return default
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return default
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-gk0gj44vhndbxo13(as(wpbguvh6vp2q9#jc9m52=#ui2jw(lu'
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+    "django-insecure-gk0gj44vhndbxo13(as(wpbguvh6vp2q9#jc9m52=#ui2jw(lu",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env_bool("DJANGO_DEBUG", True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost")
 
 
 # Application definition
@@ -58,6 +83,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
     'templates_api',
     'corsheaders',
 ]
@@ -143,6 +170,7 @@ STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 SITE_URL = 'http://127.0.0.1:8000'  # Or use your actual site domain when deployed
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://127.0.0.1:3000")
 
 # OpenAI configuration (set OPENAI_API_KEY in your environment)
 USE_OLLAMA_ONLY = os.environ.get('USE_OLLAMA_ONLY', 'false').lower() in ['1', 'true', 'yes', 'on']
@@ -150,10 +178,63 @@ OPENAI_API_KEY = '' if USE_OLLAMA_ONLY else os.environ.get('OPENAI_API_KEY', '')
 OPENAI_MODEL = os.environ.get('OPENAI_MODEL', 'gpt-4o-mini')
 OLLAMA_MODEL = os.environ.get('OLLAMA_MODEL', 'llama3.2')
 OLLAMA_URL = os.environ.get('OLLAMA_URL', 'http://127.0.0.1:11434/api/generate')
+OLLAMA_TIMEOUT = os.environ.get('OLLAMA_TIMEOUT', '')
+
+# Database template access.
+DATABASE_TEMPLATE_FREE_LIMIT = env_int("DATABASE_TEMPLATE_FREE_LIMIT", 4)
+PREMIUM_USERNAMES = [item.lower() for item in env_list("PREMIUM_USERNAMES", "mehrahimanshu")]
+PREMIUM_USER_EMAILS = [item.lower() for item in env_list("PREMIUM_USER_EMAILS", "iamhimanshumehra20@gmail.com")]
+
+# Email delivery. Configure these for real password reset emails.
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "")
+EMAIL_PORT = env_int("EMAIL_PORT", 587)
+EMAIL_USE_TLS = env_bool("EMAIL_USE_TLS", True)
+EMAIL_USE_SSL = env_bool("EMAIL_USE_SSL", False)
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER or "no-reply@inbox-studio.local")
+PASSWORD_RESET_EMAIL_ENABLED = env_bool(
+    "PASSWORD_RESET_EMAIL_ENABLED",
+    bool(EMAIL_HOST and DEFAULT_FROM_EMAIL and EMAIL_HOST_PASSWORD),
+)
+EMAIL_BACKEND = os.environ.get(
+    "EMAIL_BACKEND",
+    "django.core.mail.backends.smtp.EmailBackend"
+    if PASSWORD_RESET_EMAIL_ENABLED
+    else "django.core.mail.backends.console.EmailBackend",
+)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = env_bool("CORS_ALLOW_ALL_ORIGINS", DEBUG)
+CORS_ALLOWED_ORIGINS = env_list(
+    "CORS_ALLOWED_ORIGINS",
+    "http://localhost:3000,http://127.0.0.1:3000",
+)
+CSRF_TRUSTED_ORIGINS = env_list(
+    "CSRF_TRUSTED_ORIGINS",
+    "http://localhost:3000,http://127.0.0.1:3000",
+)
+SESSION_COOKIE_SECURE = env_bool("DJANGO_SESSION_COOKIE_SECURE", not DEBUG)
+CSRF_COOKIE_SECURE = env_bool("DJANGO_CSRF_COOKIE_SECURE", not DEBUG)
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.AllowAny",
+    ],
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": os.environ.get("DRF_ANON_THROTTLE_RATE", "40/min"),
+        "user": os.environ.get("DRF_USER_THROTTLE_RATE", "180/min"),
+    },
+}

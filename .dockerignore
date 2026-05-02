@@ -1,0 +1,10 @@
+.git
+build
+node_modules
+Email_template_builder/db.sqlite3
+Email_template_builder/media
+Email_template_builder/__pycache__
+Email_template_builder/**/__pycache__
+Email_template_builder/**/*.pyc
+*.log
+.env

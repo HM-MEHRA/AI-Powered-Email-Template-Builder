@@ -81,11 +81,31 @@ OPENAI_API_KEY=your_api_key_here
 OPENAI_MODEL=gpt-4o-mini
 ```
 
+### SMTP For Password Reset
+
+Password reset emails need SMTP or an email provider. For Gmail, create a Gmail App Password and use that password here:
+
+```env
+FRONTEND_URL=http://127.0.0.1:3000
+PASSWORD_RESET_EMAIL_ENABLED=true
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USE_TLS=true
+EMAIL_HOST_USER=your_email@gmail.com
+EMAIL_HOST_PASSWORD=your_gmail_app_password
+DEFAULT_FROM_EMAIL=your_email@gmail.com
+```
+
+Keep `PASSWORD_RESET_EMAIL_ENABLED=false` until SMTP is ready. The Account page will show `SMTP Needed` when reset email delivery is not configured.
+
 ## API Endpoints
 
 - `POST /api/generateEmail/`
 - `GET /api/history/`
 - `POST /api/saveGeneratedHistory/`
+- `POST /api/auth/password-reset/`
+- `POST /api/auth/password-reset/confirm/`
 - `POST /api/uploadImage/`
 - `POST /api/uploadEmailConfig/`
 - `POST /api/renderAndDownloadTemplate/`
@@ -105,6 +125,7 @@ OPENAI_MODEL=gpt-4o-mini
 - The frontend currently calls the backend at `http://127.0.0.1:8000/api`.
 - Email history is stored locally in SQLite.
 - `.env` is ignored from Git tracking. Use `.env.example` for shared setup.
+- Docker setup and production notes are in `DEPLOYMENT.md`.
 
 ## License
 

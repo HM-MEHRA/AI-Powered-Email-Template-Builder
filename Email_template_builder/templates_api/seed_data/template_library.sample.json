@@ -1,0 +1,26 @@
+{
+  "templates": [
+    {
+      "title": "Starter Birthday Invitation",
+      "subject": "You Are Invited to Celebrate",
+      "greeting": "Hey [Name],",
+      "body": "I am celebrating my birthday soon and would love for you to be there.\n\nIt will be a relaxed gathering with food, music, and good company.",
+      "closing": "Hope to see you there,",
+      "signature": "[Your Name]",
+      "category": "Events",
+      "tags": ["birthday", "invitation", "starter"],
+      "access_tier": "free"
+    },
+    {
+      "title": "Premium Sales Follow-Up",
+      "subject": "Following Up on Our Conversation",
+      "greeting": "Hello [Name],",
+      "body": "Thank you for taking the time to speak with me about [topic]. I wanted to follow up with a clear summary and a useful next step.\n\nBased on what you shared, I believe [solution] could help your team move faster with less manual effort. I would be happy to walk you through the details this week.",
+      "closing": "Best,",
+      "signature": "[Your Name]",
+      "category": "Sales",
+      "tags": ["sales", "follow-up", "premium"],
+      "access_tier": "premium"
+    }
+  ]
+}
